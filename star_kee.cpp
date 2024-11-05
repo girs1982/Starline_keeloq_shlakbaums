@@ -337,21 +337,21 @@ void keelog_send(byte* keelog_code){
   for(int i = 0; i<11; i++){//посылаем преамблу
     send_meander(400);
   }
-  digitalWrite(TX, HIGH);
-  delayMicroseconds(400);
-  digitalWrite(TX, LOW);
+ digitalWrite(TX, HIGH);
+ delayMicroseconds(400);
+ digitalWrite(TX, LOW);
   delayMicroseconds(4000);//посылаем хедер
   for( int i = 0; i<9; i++){
-    if(decodeMethod==1){
+    if(decodeMethod==0){
       for(int i2 = 7;i2>=0;i2--){
-        if(bitRead(keelog_code[i], i2)){
+        if(bitRead(keelog_code[i], i2)){///1 согласно
           digitalWrite(TX, HIGH);
           delayMicroseconds(400);
           digitalWrite(TX, LOW);
           delayMicroseconds(2*400);
         }
         else{
-          digitalWrite(TX, HIGH);
+          digitalWrite(TX, HIGH);///0 согласно
           delayMicroseconds(2*400);
           digitalWrite(TX, LOW);
           delayMicroseconds(400);
@@ -359,16 +359,16 @@ void keelog_send(byte* keelog_code){
       }
     }
     else{
-        for(int i2 = 0;i2<8;i2++){
+        for(int i2 = 7;i2>=0;i2--){
           if(!bitRead(keelog_code[i], i2)){
             digitalWrite(TX, HIGH);
             delayMicroseconds(400);
             digitalWrite(TX, LOW);
-            delayMicroseconds(2*400);
+            delayMicroseconds(400*2);
           }
           else{
             digitalWrite(TX, HIGH);
-            delayMicroseconds(2*400);
+            delayMicroseconds(400*2);
             digitalWrite(TX, LOW);
             delayMicroseconds(400);
           }
@@ -376,7 +376,10 @@ void keelog_send(byte* keelog_code){
     }
     
   }
+  //  digitalWrite(TX, LOW);
+  //  delayMicroseconds(1000);
 }
+
 
 void starline_send(byte* starline_code){
   Serial.println("- sending staray -");
